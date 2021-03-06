@@ -1,17 +1,53 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Header />
+    <Homepage 
+      :userRequest="userRequest"
+    />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from './components/Header.vue'
+import Homepage from './components/Homepage.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Header,
+    Homepage
+  },
+  data(){
+    return {
+      index: 0,
+      category: "",
+      API_URL: "",
+      openTDB : {
+        "any category": `https://opentdb.com/api.php?amount=10&type=multiple`,
+        "general knowledge": `https://opentdb.com/api.php?amount=10&category=9&type=multiple`,
+        "books": `https://opentdb.com/api.php?amount=10&category=10&type=multiple`,
+        "music": `https://opentdb.com/api.php?amount=10&category=12&type=multiple`,
+        "video games": `https://opentdb.com/api.php?amount=10&category=15&type=multiple`,
+        "science & Nature": `https://opentdb.com/api.php?amount=10&category=17&type=multiple`,
+        "science & Computers": `https://opentdb.com/api.php?amount=10&category=18&type=multiple`,
+        "science & Mathematics": `https://opentdb.com/api.php?amount=10&category=19&type=multiple`,
+        "mythology": `https://opentdb.com/api.php?amount=10&category=20&type=multiple`,
+        "sports": `https://opentdb.com/api.php?amount=10&category=21&type=multiple`,
+        "history": `https://opentdb.com/api.php?amount=10&category=23&type=multiple`,
+        "art": `https://opentdb.com/api.php?amount=10&category=25&type=multiple`,
+        "politics": `https://opentdb.com/api.php?amount=10&category=24&type=multiple`,
+        "celebrities": `https://opentdb.com/api.php?amount=10&category=26&type=multiple`,
+        "animals": `https://opentdb.com/api.php?amount=10&category=27&type=multiple`,
+        "vehicles": `https://opentdb.com/api.php?amount=10&category=28&type=multiple`,
+        "science & Gadgets": `https://opentdb.com/api.php?amount=10&category=30&type=multiple`,
+        "cartoon & Animations": `https://opentdb.com/api.php?amount=10&category=32&type=multiple`
+      }
+    }
+  },
+  methods: {
+    userRequest(selected){
+      this.API_URL = selected
+    }
   }
 }
 </script>
@@ -21,8 +57,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
