@@ -57,8 +57,10 @@
                 ]
             }
         },
-        mounted(){
-            this.userRequest(this.selectedCategory)
+        watch: {
+            selectedCategory(){
+                this.userRequest(this.selectedCategory)
+            }
         }
     }
 </script>

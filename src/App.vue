@@ -20,8 +20,8 @@ export default {
   data(){
     return {
       index: 0,
-      category: "",
-      API_URL: "",
+      questions: [],
+      API_URL: "https://opentdb.com/api.php?amount=10&type=multiple",
       openTDB : {
         "any category": `https://opentdb.com/api.php?amount=10&type=multiple`,
         "general knowledge": `https://opentdb.com/api.php?amount=10&category=9&type=multiple`,
@@ -41,13 +41,23 @@ export default {
         "vehicles": `https://opentdb.com/api.php?amount=10&category=28&type=multiple`,
         "science & Gadgets": `https://opentdb.com/api.php?amount=10&category=30&type=multiple`,
         "cartoon & Animations": `https://opentdb.com/api.php?amount=10&category=32&type=multiple`
-      }
+      },
     }
   },
   methods: {
     userRequest(selected){
-      this.API_URL = selected
+      this.API_URL = this.openTDB[selected]
+      console.log(this.API_URL)
     }
+  },
+  mounted(){
+    fetch(this.API_URL, {
+      method: "get"
+    }).then( (response) =>{
+      return response.json()
+    }).then( (jsonData) => {
+      this.questions = jsonData.results
+    })
   }
 }
 </script>
