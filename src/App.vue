@@ -2,7 +2,11 @@
   <div id="app">
     <Header />
     <Homepage 
+      v-if="questions.length"
       :userRequest="userRequest"
+      :currentQuiz="questions[index]"
+      :nextQuiz="nextQuiz"
+      :index="index"
     />
   </div>
 </template>
@@ -44,20 +48,32 @@ export default {
       },
     }
   },
+  watch: {
+    API_URL(){
+      this.getQuestions()
+      this.index = 0
+    }
+  },
   methods: {
     userRequest(selected){
       this.API_URL = this.openTDB[selected]
       console.log(this.API_URL)
-    }
-  },
-  mounted(){
-    fetch(this.API_URL, {
+    },
+    getQuestions(){
+      fetch(this.API_URL, {
       method: "get"
     }).then( (response) =>{
       return response.json()
     }).then( (jsonData) => {
       this.questions = jsonData.results
     })
+    },
+    nextQuiz(){
+      this.index++
+    }
+  },
+  mounted(){
+    this.getQuestions();
   }
 }
 </script>
