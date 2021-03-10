@@ -7,6 +7,7 @@
       :currentQuiz="questions[index]"
       :nextQuiz="nextQuiz"
       :index="index"
+      :increment="increment"
     />
   </div>
 </template>
@@ -70,6 +71,9 @@ export default {
     },
     nextQuiz(){
       this.index++
+    },
+    increment(isCorrect){
+      console.log(isCorrect)
     }
   },
   mounted(){

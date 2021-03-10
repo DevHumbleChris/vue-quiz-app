@@ -18,10 +18,17 @@
         </b-form-group>
         <b-card-text v-html="currentQuiz.question"></b-card-text>
         <b-list-group class="mb-3">
-            <b-list-group-item v-for="(answer, index) in answers" :key="index" v-html="answer" @click="getSelectedIndex(index)" :class="[selectedIndex === index ? 'selected': '']"></b-list-group-item>
+            <b-list-group-item 
+                v-for="(answer, index) in answers" 
+                :key="index" 
+                v-html="answer" 
+                @click.prevent="getSelectedIndex(index)" 
+                :class="answeredClass(index)"
+            >
+            </b-list-group-item>
         </b-list-group>
-        <b-button href="#" variant="primary">SUBMIT</b-button>
-        <b-button @click="nextQuiz" variant="info" class="float-right">NEXT</b-button>
+        <b-button href="#" variant="primary" @click="submitAnswer" :disabled="selectedIndex == null && !answered">SUBMIT</b-button>
+        <b-button @click="nextQuiz" variant="info" class="float-right" :disabled="!answered">NEXT</b-button>
   </b-card>
    
 </template>
@@ -34,7 +41,8 @@
             userRequest: Function,
             currentQuiz: Object,
             nextQuiz: Function,
-            index: Number
+            index: Number,
+            increment: Function
         },
         data(){
             return {
@@ -60,7 +68,9 @@
                     {value: "cartoon & Animations", text: "cartoon & Animations"}
                 ],
                 shuffledAnswers: [],
-                selectedIndex: null
+                selectedIndex: null,
+                correctIndex: null,
+                answered: false,
             }
         },
         watch: {
@@ -70,8 +80,9 @@
             currentQuiz: {
                 immediate: true,
                 handler(){
-                    this.shuffleAnswers()
                     this.selectedIndex = null
+                    this.answered = false
+                    this.shuffleAnswers()
                 }
             }
         },
@@ -84,10 +95,35 @@
             shuffleAnswers(){
                 let answers = [...this.currentQuiz.incorrect_answers, this.currentQuiz.correct_answer]
                 this.shuffledAnswers = _.shuffle(answers)
+                this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuiz.correct_answer)
             },
             getSelectedIndex(index){
                 this.selectedIndex = index
-                console.log(index)
+            },
+            answeredClass(index){
+                let ansClass;
+                if(!this.answered && this.selectedIndex === index){
+                    ansClass = "selected"
+                }else if(this.answered && this.correctIndex === index){
+                    ansClass = "correct"
+                }else if(this.answered && this.correctIndex !== index && this.selectedIndex === index){
+                    ansClass = "incorrect"
+                }
+                return ansClass;
+            },
+            submitAnswer(){
+                let isCorrect = false
+
+                if(this.selectedIndex === this.correctIndex){
+                    isCorrect = true
+                }
+                if(isCorrect){
+                    console.log("Answer Is Correct")
+                }else{
+                    console.log("Wrong Answer")
+                }
+                this.answered = true;
+                this.increment(isCorrect)
             }
         }
     }
@@ -104,5 +140,11 @@
     }
     .selected{
         background: lightblue;
+    }
+    .correct{
+        background: lightgreen;
+    }
+    .incorrect{
+        background: rgb(243, 96, 96);
     }
 </style>
