@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <Header />
+    <Header 
+      
+    />
     <Homepage 
       v-if="questions.length"
       :userRequest="userRequest"
@@ -8,6 +10,8 @@
       :nextQuiz="nextQuiz"
       :index="index"
       :increment="increment"
+      :numTotal="numTotal"
+      :numCorrect="numCorrect"
     />
   </div>
 </template>
@@ -47,6 +51,8 @@ export default {
         "science & Gadgets": `https://opentdb.com/api.php?amount=10&category=30&type=multiple`,
         "cartoon & Animations": `https://opentdb.com/api.php?amount=10&category=32&type=multiple`
       },
+      numTotal: 0,
+      numCorrect: 0
     }
   },
   watch: {
@@ -73,7 +79,10 @@ export default {
       this.index++
     },
     increment(isCorrect){
-      console.log(isCorrect)
+      if(isCorrect){
+        this.numCorrect++;
+      }
+      this.numTotal++;
     }
   },
   mounted(){

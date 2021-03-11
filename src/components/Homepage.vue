@@ -1,35 +1,71 @@
 <template>
-    <b-card
-        :title="currentQuiz.category"
-        tag="article"
-        style="max-width: 30rem; margin: auto; margin-top: 50px;"
-        class="mb-2"
-    >
-        <b-form-group
-            id="fieldset-horizontal"
-            label-cols-sm="4"
-            label-cols-lg="3"
-            content-cols-sm
-            content-cols-lg="7"
-            label="Category"
-            label-for="selectedCategory"
-            >
-        <b-form-select v-model="selectedCategory" :options="options"></b-form-select>
-        </b-form-group>
-        <b-card-text v-html="currentQuiz.question"></b-card-text>
-        <b-list-group class="mb-3">
-            <b-list-group-item 
-                v-for="(answer, index) in answers" 
-                :key="index" 
-                v-html="answer" 
-                @click.prevent="getSelectedIndex(index)" 
-                :class="answeredClass(index)"
-            >
-            </b-list-group-item>
-        </b-list-group>
-        <b-button href="#" variant="primary" @click="submitAnswer" :disabled="selectedIndex == null && !answered">SUBMIT</b-button>
-        <b-button @click="nextQuiz" variant="info" class="float-right" :disabled="!answered">NEXT</b-button>
-  </b-card>
+    <div>
+        <div class="button-Div">
+            <b-button id="show-btn" @click="$bvModal.show('bv-modal-example')" :disabled="numTotal <= 0">Check Current Scores</b-button>
+
+            <b-modal id="bv-modal-example" hide-footer>
+                <template #modal-title>
+                Current Scores
+                </template>
+                <div class="d-block text-center">
+                <p>
+                    Questions Answered Correctly: <span> {{ numCorrect }} </span>
+                </p>
+                <p>
+                    Total Questions: <span> {{ numTotal }} </span>
+                </p>
+                <p class="percentageScore"> {{ percentageScore }}% </p>
+                </div>
+                <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button>
+            </b-modal>
+        </div>
+        <div v-if="answered" class="mt-1">
+            <div class="divCorrect text-center" v-if="correctIndex === selectedIndex">
+                <b-alert show dismissible>
+                    <p>Correct</p>
+                    <b-icon icon="check-square" scale="2" variant="success"></b-icon>
+                </b-alert>
+            </div>
+            <div class="divIncorrect text-center" v-else-if="correctIndex !== selectedIndex">
+                <b-alert show dismissible>
+                    <p>Incorrect</p>
+                    <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
+                </b-alert>
+            </div>
+        </div>
+        <b-card
+            :title="currentQuiz.category"
+            tag="article"
+            style="max-width: 30rem; margin: auto; margin-top: 10px;"
+            class="mb-2"
+        >
+            <b-form-group
+                id="fieldset-horizontal"
+                label-cols-sm="4"
+                label-cols-lg="3"
+                content-cols-sm
+                content-cols-lg="7"
+                label="Category"
+                label-for="selectedCategory"
+                >
+            <b-form-select v-model="selectedCategory" :options="options"></b-form-select>
+            </b-form-group>
+            <b-card-text v-html="currentQuiz.question"></b-card-text>
+            <b-list-group class="mb-3">
+                <b-list-group-item 
+                    v-for="(answer, index) in answers" 
+                    :key="index" 
+                    v-html="answer" 
+                    @click.prevent="getSelectedIndex(index)" 
+                    :class="answeredClass(index)"
+                >
+                </b-list-group-item>
+            </b-list-group>
+            <b-button href="#" variant="primary" @click="submitAnswer" :disabled="selectedIndex == null || answered">SUBMIT</b-button>
+            <b-button @click="nextQuiz" variant="info" class="float-right" :disabled="!answered">NEXT</b-button>
+    </b-card>
+
+    </div>
    
 </template>
 
@@ -42,7 +78,9 @@
             currentQuiz: Object,
             nextQuiz: Function,
             index: Number,
-            increment: Function
+            increment: Function,
+            numTotal: Number,
+            numCorrect: Number
         },
         data(){
             return {
@@ -90,6 +128,11 @@
             answers(){
                 return this.shuffledAnswers;
             },
+            percentageScore(){
+                let score = 0;
+                score = Math.floor((this.numCorrect / this.numTotal ) * 100);
+                return score;
+            }
         },
         methods: {
             shuffleAnswers(){
@@ -124,7 +167,7 @@
                 }
                 this.answered = true;
                 this.increment(isCorrect)
-            }
+            },
         }
     }
 </script>
@@ -146,5 +189,18 @@
     }
     .incorrect{
         background: rgb(243, 96, 96);
+    }
+    .button-Div{
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        margin-top: 12px;
+    }
+    .divCorrect, .divIncorrect{
+        width: 30rem;
+        margin: auto;
+    }
+    .percentageScore{
+        font-size: 30px;
     }
 </style>
