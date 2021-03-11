@@ -174,7 +174,7 @@
 
 <style scoped>
     .trivia-box{
-        width: 30rem;
+        width: 22rem;
         margin: auto;
     }
     .list-group-item:hover{
@@ -197,7 +197,7 @@
         margin-top: 12px;
     }
     .divCorrect, .divIncorrect{
-        width: 30rem;
+        width: 22rem;
         margin: auto;
     }
     .percentageScore{
